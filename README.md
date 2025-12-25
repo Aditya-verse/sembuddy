@@ -1,6 +1,4 @@
-<div align="center">
 
-<img width="1200" alt="SemBuddy Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" style="border-radius: 10px;" />
 
 # 🎓 SemBuddy
 **Empowering Students, One Semester at a Time.**
