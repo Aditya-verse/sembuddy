@@ -12,6 +12,9 @@ import {
   Moon
 } from 'lucide-react';
 
+// Driving Academy components (lazy imported)
+const DrivingAcademy = React.lazy(() => import('./src/pages/DrivingAcademy'));
+
 // --- GLOBAL DECLARATIONS ---
 declare global {
   interface Window {
@@ -2372,7 +2375,7 @@ const Footer = ({ showToast, onNavigate }: any) => {
     </footer>
   );
 };
-const UserDashboard = ({ user, onLogout }: { user: any, onLogout: () => void }) => {
+const UserDashboard = ({ user, onLogout, onNavigate }: { user: any, onLogout: () => void, onNavigate?: (page: string) => void }) => {
   const [note, setNote] = useState("");
   const [status, setStatus] = useState("Studying for exams 📚");
   const [isDark, setIsDark] = useState(true);
@@ -2439,7 +2442,7 @@ const UserDashboard = ({ user, onLogout }: { user: any, onLogout: () => void }) 
           </button>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Activity 1: The "Dropbox" / Scratchpad */}
           <motion.div 
             initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
@@ -2485,6 +2488,25 @@ const UserDashboard = ({ user, onLogout }: { user: any, onLogout: () => void }) 
               </button>
             </div>
           </motion.div>
+
+          {/* Driving Academy */}
+          <motion.button
+            onClick={() => onNavigate?.('driving-academy')}
+            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
+            className={`p-6 rounded-3xl border text-left hover:border-brand-teal/50 transition-all ${isDark ? 'bg-gradient-to-br from-brand-blue/10 to-brand-teal/10 border-brand-teal/20 hover:shadow-lg hover:shadow-brand-teal/20' : 'bg-white border-slate-200'}`}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-lg bg-brand-green/20 text-brand-green text-2xl">🚗</div>
+              <h3 className={`font-bold text-xl ${isDark ? 'text-white' : 'text-slate-800'}`}>Driving Academy</h3>
+            </div>
+            <p className={`text-sm mb-4 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Learn road safety & driving skills through immersive 3D simulations
+            </p>
+            <div className="flex items-center gap-2 text-brand-teal font-bold text-sm">
+              <span>Launch Academy</span>
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </motion.button>
         </div>
 
       </div>
@@ -2664,7 +2686,17 @@ const App = () => {
 
         {/* DASHBOARD PAGE */}
         {currentPage === 'dashboard' && user && (
-            <UserDashboard user={user} onLogout={handleLogout} />
+            <UserDashboard user={user} onLogout={handleLogout} onNavigate={navigateTo} />
+        )}
+
+        {/* DRIVING ACADEMY PAGE */}
+        {currentPage === 'driving-academy' && user && (
+          <React.Suspense fallback={<div className="w-full h-screen bg-brand-dark flex items-center justify-center"><Loader2 className="w-8 h-8 text-brand-teal animate-spin" /></div>}>
+            <DrivingAcademy 
+              onLessonSelect={(lessonId) => navigateTo(`lesson-${lessonId}`)} 
+              onHome={() => navigateTo('dashboard')} 
+            />
+          </React.Suspense>
         )}
 
         {currentPage === 'privacy' && <PrivacyPage />}
